@@ -30,7 +30,12 @@ class User extends Database
 
         $this->query($sql);
         $idUser = $this->dbConnection->insert_id;
-        return $this->find($idUser);
+        $userData = $this->query("SELECT id, full_name, username, email FROM {$this->table} WHERE id = {$idUser}")->fetch_all(MYSQLI_ASSOC);
+        return [
+            'message' => 'Usuario registrado correctamente.',
+            'data' => $userData
+        ];
+            
     }
 
     public function login($request)

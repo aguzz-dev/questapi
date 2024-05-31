@@ -50,6 +50,5 @@ class Question extends Database
         return[
             'message' => 'Se ha actualizado el estado de la pregunta a Respondida.',
         ];
-
     } 
 }
