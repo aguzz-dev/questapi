@@ -16,6 +16,28 @@ class AuthController {
         return $res;
     }
 
+    public function checkSession()
+    {
+        session_start();
+        $request = json_decode(file_get_contents("php://input"), true);
+        if($_SESSION['token'] != $request['token']){
+            http_response_code(401);
+            return [
+                'error' => 'Token inválido.',
+                'status_code' => 401
+            ];
+        } 
+        http_response_code(200);
+        return [
+            'message' => 'Sesión validada con éxito',
+            'status_code' => 200,
+            'user' => [
+                'username' => $_SESSION['username'],
+                'email' => $_SESSION['email']
+            ]
+        ];
+    }
+
     public static function generateToken($userData) {
         $issuedAt = time();
         $expirationTime = $issuedAt + 3600 * 24;
