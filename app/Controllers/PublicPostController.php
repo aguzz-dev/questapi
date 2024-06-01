@@ -8,15 +8,17 @@ class PublicPostController
 {
     public function makePublicPost()
     {
-        VerifyToken::verifyToken($_POST['token']);
-        $res = (new PublicPost)->makePublicPost($_POST['id']);
+        $request = json_decode(file_get_contents("php://input"), true);
+        VerifyToken::verifyToken($request['token']);
+        $res = (new PublicPost)->makePublicPost($request['id']);
         return $res;
     }
 
     public function makePrivatePost()
     {
-        VerifyToken::verifyToken($_POST['token']);
-        $res = (new PublicPost)->makePrivatePost($_POST['id']);
+        $request = json_decode(file_get_contents("php://input"), true);
+        VerifyToken::verifyToken($request['token']);
+        $res = (new PublicPost)->makePrivatePost($request['id']);
         return $res;
     }
 }
