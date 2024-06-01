@@ -12,8 +12,19 @@ class AuthController {
     {
         $request = json_decode(file_get_contents("php://input"), true);
         session_start();
-        $res = (new User)->login($request);
-        return $res;
+        try {
+            (new User)->login($request);
+            return [
+                'status'    => 'success',
+                'message'   => 'Inicio de sesión exitoso'
+            ];
+        } catch (\Exception $e) {
+            http_response_code($e->getCode());
+            return [
+                'status'    => 'error',
+                'message'   => $e->getMessage()
+            ];
+        }
     }
 
     public function checkSession()
@@ -23,13 +34,15 @@ class AuthController {
         if($_SESSION['token'] != $request['token']){
             http_response_code(401);
             echo json_encode([
-                'error' => 'Token inválido',
+                'status' => 'error',
+                'message' => 'Token inválido',
                 'status_code' => 401
             ]);
             exit;
         } 
         http_response_code(200);
-        return [
+        echo json_encode([
+            'status' => 'success',
             'message' => 'Sesión validada con éxito',
             'status_code' => 200,
             'user' => [
@@ -37,7 +50,8 @@ class AuthController {
                 'username' => $_SESSION['username'],
                 'email' => $_SESSION['email']
             ]
-        ];
+        ]);
+        exit;
     }
 
     public static function generateToken($userData) {

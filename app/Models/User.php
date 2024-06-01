@@ -51,9 +51,8 @@ class User extends Database
             throw new \Exception('Usuario no encontrado', 404);
         }
         if (!password_verify($password, $user['password'])) {
-            return 422;
+            throw new \Exception('Credenciales incorrectas', 422);
         }
-
         $token = AuthController::generateToken([
             'id' => $user['id'],
             'username' => $user['username'],
