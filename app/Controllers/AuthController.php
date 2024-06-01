@@ -32,6 +32,7 @@ class AuthController {
             'message' => 'Sesión validada con éxito',
             'status_code' => 200,
             'user' => [
+                'id' => $_SESSION['userId'],
                 'username' => $_SESSION['username'],
                 'email' => $_SESSION['email']
             ]
