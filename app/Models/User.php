@@ -114,6 +114,4 @@ class User extends Database
         $this->query($sql);
         return 'Usuario eliminado correctamente del sistema';
     }
-
-
 }

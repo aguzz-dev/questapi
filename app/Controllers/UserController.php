@@ -8,7 +8,6 @@ class UserController
     public function store()
     {
         $request = json_decode(file_get_contents("php://input"), true);
-
         $res = (new User)->store($request);
         return $res;
     }
