@@ -47,6 +47,7 @@ class User extends Database
         $result = $this->query($sql);
 
         if ($result == null) {
+            http_response_code(404);
             return [
                 'status'    => 'error',
                 'message'   => 'Usuario no encontrado'
@@ -55,6 +56,7 @@ class User extends Database
 
         $user = $result->fetch_assoc();
         if (!password_verify($password, $user['password'])) {
+            http_response_code(422);
             return [
                 'status' => 'error',
                 'message' => 'Contraseña incorrecta'
