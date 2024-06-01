@@ -40,10 +40,10 @@ class User extends Database
 
     public function login($request)
     {
-        $username = $request['username'];
+        $email = $request['email'];
         $password = $request['password'];
 
-        $sql = "SELECT * FROM {$this->table} WHERE username = '{$username}' LIMIT 1";
+        $sql = "SELECT * FROM {$this->table} WHERE email = '{$email}' LIMIT 1";
         $result = $this->query($sql);
 
         if ($result == null) {
