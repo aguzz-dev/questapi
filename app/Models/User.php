@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+use App\Request\RegisterUserRequest;
 use Database;
 use App\Controllers\AuthController;
 
@@ -15,6 +16,7 @@ class User extends Database
 
     public function store($request)
     {
+        RegisterUserRequest::validate($request);
         $values = array_values($request);
         $sql = "INSERT INTO {$this->table} 
                 (`full_name`, 
@@ -32,6 +34,7 @@ class User extends Database
         $idUser = $this->dbConnection->insert_id;
         $userData = $this->query("SELECT id, full_name, username, email FROM {$this->table} WHERE id = {$idUser}")->fetch_all(MYSQLI_ASSOC);
         return [
+            'status' => 'success',
             'message' => 'Usuario registrado correctamente.',
             'data' => $userData
         ];
@@ -43,24 +46,12 @@ class User extends Database
         $email = $request['email'];
         $password = $request['password'];
 
-        $sql = "SELECT * FROM {$this->table} WHERE email = '{$email}' LIMIT 1";
-        $result = $this->query($sql);
-
-        if ($result == null) {
-            http_response_code(404);
-            return [
-                'status'    => 'error',
-                'message'   => 'Usuario no encontrado'
-            ];
+        $user = $this->query("SELECT * FROM {$this->table} WHERE email = '{$email}' LIMIT 1")->fetch_assoc();
+        if (is_null($user)) {
+            throw new \Exception('Usuario no encontrado', 404);
         }
-
-        $user = $result->fetch_assoc();
         if (!password_verify($password, $user['password'])) {
-            http_response_code(422);
-            return [
-                'status' => 'error',
-                'message' => 'Contraseña incorrecta'
-            ];
+            return 422;
         }
 
         $token = AuthController::generateToken([
