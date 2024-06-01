@@ -13,21 +13,21 @@ class PostController
 
     public function store()
     {
-        $request = $_POST;
+        $request = json_decode(file_get_contents("php://input"), true);
         $res = (new Post)->store($request);
         return $res;
     }
 
     public function update()
     {
-        parse_str(file_get_contents("php://input"),$request);
+        $request = json_decode(file_get_contents("php://input"), true);
         $res = (new Post)->update($request);
         return $res;
     }
 
     public function destroy()
     {
-        parse_str(file_get_contents("php://input"),$product);
+        $product = json_decode(file_get_contents("php://input"), true);
         $res = (new Post)->destroy($product['id']);
         return $res;
     }

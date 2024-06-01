@@ -7,21 +7,22 @@ class UserController
 {
     public function store()
     {
-        $request = $_POST;
+        $request = json_decode(file_get_contents("php://input"), true);
+
         $res = (new User)->store($request);
         return $res;
     }
 
     public function update()
     {
-        parse_str(file_get_contents("php://input"),$request);
+        $request = json_decode(file_get_contents("php://input"), true);
         $res = (new User)->update($request);
         return $res;
     }
 
     public function destroy()
     {
-        parse_str(file_get_contents("php://input"),$user);
+        $user = json_decode(file_get_contents("php://input"), true);
         $res = (new User)->destroy($user['id']);
         return $res;
     }

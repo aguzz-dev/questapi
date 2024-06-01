@@ -33,6 +33,7 @@ class Route
     {
         $uri = $_SERVER['REQUEST_URI'];
         $uri = trim($uri, '/');
+        $uri = str_replace('questapi/', '', $uri);
     
         $method = $_SERVER['REQUEST_METHOD'];
         

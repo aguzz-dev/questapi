@@ -10,7 +10,7 @@ class AuthController {
 
     public function login()
     {
-        $request = $_POST;
+        $request = json_decode(file_get_contents("php://input"), true);
         session_start();
         $res = (new User)->login($request);
         return $res;
