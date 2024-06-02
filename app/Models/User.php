@@ -1,8 +1,9 @@
 <?php
 namespace App\Models;
-use App\Request\RegisterUserRequest;
+
 use Database;
 use App\Controllers\AuthController;
+use Exception;
 
 class User extends Database
 {
@@ -16,7 +17,6 @@ class User extends Database
 
     public function store($request)
     {
-        RegisterUserRequest::validate($request);
         $values = array_values($request);
         $sql = "INSERT INTO {$this->table} 
                 (`full_name`, 
@@ -48,10 +48,10 @@ class User extends Database
 
         $user = $this->query("SELECT * FROM {$this->table} WHERE email = '{$email}' LIMIT 1")->fetch_assoc();
         if (is_null($user)) {
-            throw new \Exception('Usuario no encontrado', 404);
+            throw new Exception('Usuario no encontrado', 404);
         }
         if (!password_verify($password, $user['password'])) {
-            throw new \Exception('Credenciales incorrectas', 422);
+            throw new Exception('Credenciales incorrectas', 422);
         }
         $token = AuthController::generateToken([
             'id' => $user['id'],
@@ -80,8 +80,7 @@ class User extends Database
     {
         $User = $this->find($request['id']);
         if(!$User){
-            http_response_code(422);
-            return "Usuario no encontrado.";
+            throw new Exception('Usuario no encontrado', 404);
         }
         $fields = [];
         foreach ($request as $key => $value) {
@@ -97,8 +96,7 @@ class User extends Database
     {
         $user = $this->find($id);
         if(!$user){
-            http_response_code(422);
-            return "Post no encontrado.";
+            throw new Exception('Usuario no encontrado', 404);
         }
         $sql = "DELETE FROM {$this->table} WHERE id = {$id}";
         $this->query($sql);

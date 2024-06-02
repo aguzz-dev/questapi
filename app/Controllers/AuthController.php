@@ -3,6 +3,7 @@ namespace App\Controllers;
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use App\Models\User;
+use App\Request\LoginRequest;
 use \Firebase\JWT\JWT;
 
 class AuthController {
@@ -11,6 +12,7 @@ class AuthController {
     public function login()
     {
         $request = json_decode(file_get_contents("php://input"), true);
+        LoginRequest::validate($request);
         session_start();
         try {
             $data = (new User)->login($request);
@@ -34,7 +36,9 @@ class AuthController {
         $request = file_get_contents("php://input");
         $charsToRemove = ['token','{','}',':', '=','"'];
         $token = trim(str_replace($charsToRemove,'',$request));
-        if($_SESSION['token'] != $token){
+        $sessionToken = str_replace('token','',$_SESSION['token']);
+        
+        if($sessionToken != $token){
             http_response_code(401);
             echo json_encode([
                 'status' => 'error',
