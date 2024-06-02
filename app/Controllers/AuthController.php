@@ -13,10 +13,11 @@ class AuthController {
         $request = json_decode(file_get_contents("php://input"), true);
         session_start();
         try {
-            (new User)->login($request);
+            $data = (new User)->login($request);
             return [
                 'status'    => 'success',
-                'message'   => 'Inicio de sesión exitoso'
+                'message'   => 'Inicio de sesión exitoso',
+                'data'      => $data
             ];
         } catch (\Exception $e) {
             http_response_code($e->getCode());
@@ -30,8 +31,10 @@ class AuthController {
     public function checkSession()
     {
         session_start();
-        $request = json_decode(file_get_contents("php://input"), true);
-        if($_SESSION['token'] != $request['token']){
+        $request = file_get_contents("php://input");
+        $charsToRemove = ['token','{','}',':', '=','"'];
+        $token = trim(str_replace($charsToRemove,'',$request));
+        if($_SESSION['token'] != $token){
             http_response_code(401);
             echo json_encode([
                 'status' => 'error',
