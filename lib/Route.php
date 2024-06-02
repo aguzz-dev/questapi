@@ -1,5 +1,6 @@
 <?php
 namespace Lib;
+require_once '../config.php';
 
 class Route
 {
@@ -33,7 +34,7 @@ class Route
     {
         $uri = $_SERVER['REQUEST_URI'];
         $uri = trim($uri, '/');
-        $uri = str_replace('questapi/', '', $uri);
+        $uri = str_replace(APP_NAME.'/', '', $uri);
     
         $method = $_SERVER['REQUEST_METHOD'];
         
