@@ -30,10 +30,16 @@ class Post extends Database{
         VerifyToken::verifyToken($request['token']);
         $title  = $request['title'];
         $text   = $request['text'];
-        $userId = $_SESSION['userId']; 
+        $userPersonalToken = (new PersonalAccessToken)->getIdByToken($request['token'])[0];
+        $userId = $userPersonalToken['user_id'];
         $this->query("INSERT INTO {$this->table} (`title`, `text`, `user_id`) VALUES ('{$title}', '{$text}', '{$userId}')");
         $idPost = $this->dbConnection->insert_id;
-        return $this->find($idPost);
+        $postCreated = $this->find($idPost);
+        return ([
+            'status' => 'success',
+            'message' => 'Post creado con exito',
+            'data' => $postCreated
+        ]);
     }
 
     public function update($request)

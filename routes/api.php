@@ -10,6 +10,7 @@ use App\Controllers\UserController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/check-session', [AuthController::class, 'checkSession']);
+Route::post('/destroy-session', [AuthController::class, 'destroyToken']);
 
 Route::get('/posts', [PostController::class, 'index']);
 Route::post('/posts/create', [PostController::class, 'store']);

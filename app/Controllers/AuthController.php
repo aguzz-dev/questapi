@@ -2,6 +2,7 @@
 namespace App\Controllers;
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+use App\Models\PersonalAccessToken;
 use App\Models\User;
 use App\Request\LoginRequest;
 use \Firebase\JWT\JWT;
@@ -13,7 +14,6 @@ class AuthController {
     {
         $request = json_decode(file_get_contents("php://input"), true);
         LoginRequest::validate($request);
-        session_start();
         try {
             $data = (new User)->login($request);
             return [
@@ -32,13 +32,12 @@ class AuthController {
 
     public function checkSession()
     {
-        session_start();
-        $request = file_get_contents("php://input");
-        $charsToRemove = ['token','{','}',':', '=','"'];
-        $token = trim(str_replace($charsToRemove,'',$request));
-        $sessionToken = str_replace('token','',$_SESSION['token']);
-        
-        if($sessionToken != $token){
+        $request = json_decode(file_get_contents("php://input"));
+        $userToken = (new PersonalAccessToken)->getTokenById($request->id);
+        $charsToRemove = ['[','"',']'];
+        $token = str_replace($charsToRemove, '', $userToken);
+
+        if($token != $request->token){
             http_response_code(401);
             echo json_encode([
                 'status' => 'error',
@@ -46,16 +45,17 @@ class AuthController {
                 'status_code' => 401
             ]);
             exit;
-        } 
+        }
+        $user = (new User)->find($request->id)[0];
         http_response_code(200);
         echo json_encode([
             'status' => 'success',
             'message' => 'Sesión validada con éxito',
             'status_code' => 200,
             'user' => [
-                'id' => $_SESSION['userId'],
-                'username' => $_SESSION['username'],
-                'email' => $_SESSION['email']
+                'id' => $user['id'],
+                'username' => $user['username'],
+                'email' => $user['email']
             ]
         ]);
         exit;
@@ -71,5 +71,13 @@ class AuthController {
         );
 
         return JWT::encode($payload, self::$secretKey, 'HS256');
+    }
+
+    public function destroyToken()
+    {
+        $request = json_decode(file_get_contents("php://input"));
+        $res = (new PersonalAccessToken)->destroyToken($request->id);
+        return $res;
+
     }
 }

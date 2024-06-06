@@ -21,7 +21,7 @@ class Question extends Database
             http_response_code(422);
             return[
                 'error' => 'Post público no encontrado.'
-            ]; 
+            ];
         }
         $text = $request['text'];
         $this->query("INSERT INTO `{$this->table}` (public_post_id, text) VALUES ({$publicPostId}, '{$text}')");

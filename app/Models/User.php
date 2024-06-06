@@ -38,7 +38,6 @@ class User extends Database
             'message' => 'Usuario registrado correctamente.',
             'data' => $userData
         ];
-            
     }
 
     public function login($request)
@@ -58,10 +57,7 @@ class User extends Database
             'username' => $user['username'],
             'email' => $user['email']
         ]);
-        $_SESSION['userId'] = $user['id'];
-        $_SESSION['username'] = $user['username']; 
-        $_SESSION['email'] = $user['email'];
-        $_SESSION['token'] = $token;
+        $this->query("INSERT INTO `personal_access_tokens` (`token`, `user_id`) VALUES ('{$token}', '{$user['id']}')");
         $userData = [
             'id' => $user['id'],
             'full_name' => $user['full_name'],
