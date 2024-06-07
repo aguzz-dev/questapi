@@ -72,12 +72,14 @@ class AuthController {
 
         return JWT::encode($payload, self::$secretKey, 'HS256');
     }
-
+    
     public function destroyToken()
     {
         $request = json_decode(file_get_contents("php://input"));
-        $res = (new PersonalAccessToken)->destroyToken($request->id);
+        $userId = (new PersonalAccessToken)->getIdByToken($request->token);
+        $res = (new PersonalAccessToken)->destroyToken($userId);
         return $res;
-
+        
     }
+
 }

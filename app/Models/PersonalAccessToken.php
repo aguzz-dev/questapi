@@ -2,7 +2,6 @@
 
 namespace  App\Models;
 
-use App\Middleware\VerifyToken;
 use Database;
 
 class PersonalAccessToken extends Database
@@ -17,6 +16,7 @@ class PersonalAccessToken extends Database
 
     public function getTokenById($id)
     {
+        $id = implode($id);
         $token = $this->query("SELECT `token` FROM {$this->table} WHERE user_id = {$id} ORDER BY id DESC LIMIT 1;")->fetch_row();
         return  json_encode($token);
     }
@@ -33,26 +33,29 @@ class PersonalAccessToken extends Database
             exit;
         }
         http_response_code(200);
-
     }
-    
+
     public function getIdByToken($token)
     {
-        $id = $this->query("SELECT `id` FROM {$this->table} WHERE `token` = '{$token}'")->fetch_all(MYSQLI_ASSOC);
-        if (empty($id)){
-            http_response_code(404);
+        $id = $this->query("SELECT id FROM {$this->table} WHERE `token` = '{$token}'")->fetch_all(MYSQLI_ASSOC);
+        if(empty($id)){
+            http_response_code(401);
             echo json_encode([
                 'status' => 'error',
-                'message' => 'token no encontrado'
+                'message' => 'Token invalido'
             ]);
             exit;
         }
-        return $id;
+        http_response_code(200);
+        return $id[0];
     }
-
+    
     public function destroyToken($id)
     {
-        $isTokenExist = json_decode($this->getTokenById($id));
+        $sessionId = implode($id);
+        $userId = $this->query("SELECT user_id FROM {$this->table} WHERE id = {$sessionId}")->fetch_all(MYSQLI_ASSOC)[0];
+        
+        $isTokenExist = $this->getTokenById($userId);
         if (is_null($isTokenExist)){
             http_response_code(404);
             echo json_encode([
@@ -61,7 +64,8 @@ class PersonalAccessToken extends Database
             ]);
             exit;
         }
-        $this->query("DELETE FROM `personal_access_tokens` WHERE `user_id` = '{$id}'");
+        $userId = implode($userId);
+        $this->query("DELETE FROM `personal_access_tokens` WHERE `user_id` = '{$userId}'");
         http_response_code(200);
         echo json_encode([
             'status' => 'success',
