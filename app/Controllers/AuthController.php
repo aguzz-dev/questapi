@@ -2,6 +2,7 @@
 namespace App\Controllers;
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+use App\Helpers\JsonResponse;
 use App\Models\PersonalAccessToken;
 use App\Models\User;
 use App\Request\LoginRequest;
@@ -16,17 +17,9 @@ class AuthController {
         LoginRequest::validate($request);
         try {
             $data = (new User)->login($request);
-            return [
-                'status'    => 'success',
-                'message'   => 'Inicio de sesión exitoso',
-                'data'      => $data
-            ];
+            JsonResponse::send(true, 'Inicio de sesión exitoso', 200 , $data);
         } catch (\Exception $e) {
-            http_response_code($e->getCode());
-            return [
-                'status'    => 'error',
-                'message'   => $e->getMessage()
-            ];
+            JsonResponse::send(false, $e->getMessage(), $e->getCode());
         }
     }
 
@@ -38,27 +31,15 @@ class AuthController {
         $token = str_replace($charsToRemove, '', $userToken);
 
         if($token != $request->token){
-            http_response_code(401);
-            echo json_encode([
-                'status' => 'error',
-                'message' => 'Token inválido',
-                'status_code' => 401
-            ]);
-            exit;
+            JsonResponse::send(false, 'Token inválido', 401);
         }
         $user = (new User)->find($request->id)[0];
-        http_response_code(200);
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Sesión validada con éxito',
-            'status_code' => 200,
-            'user' => [
-                'id' => $user['id'],
-                'username' => $user['username'],
-                'email' => $user['email']
-            ]
-        ]);
-        exit;
+        $userData = [
+            'id' => $user['id'],
+            'username' => $user['username'],
+            'email' => $user['email']
+        ];
+        JsonResponse::send(true, 'Sesión validada con éxito', 200, $userData);
     }
 
     public static function generateToken($userData) {
@@ -69,7 +50,6 @@ class AuthController {
             'exp' => $expirationTime,
             'data' => $userData
         );
-
         return JWT::encode($payload, self::$secretKey, 'HS256');
     }
     
@@ -77,9 +57,7 @@ class AuthController {
     {
         $request = json_decode(file_get_contents("php://input"));
         $userId = (new PersonalAccessToken)->getIdByToken($request->token);
-        $res = (new PersonalAccessToken)->destroyToken($userId);
-        return $res;
-        
+        (new PersonalAccessToken)->destroyToken($userId);
+        JsonResponse::send(true, 'Sesión eliminada con éxito');
     }
-
 }

@@ -65,11 +65,5 @@ class PersonalAccessToken extends Database
         }
         $userId = implode($userId);
         $this->query("DELETE FROM `personal_access_tokens` WHERE `user_id` = '{$userId}'");
-        http_response_code(200);
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Session eliminada con exito'
-        ]);
-        exit;
     }
 }

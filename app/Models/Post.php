@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use App\Helpers\JsonResponse;
 use App\Middleware\VerifyToken;
 use Database;
 
@@ -30,24 +31,18 @@ class Post extends Database{
         VerifyToken::verifyToken($request['token']);
         $title  = $request['title'];
         $text   = $request['text'];
-        $userPersonalToken = (new PersonalAccessToken)->getIdByToken($request['token'])[0];
-        $userId = $userPersonalToken['user_id'];
+        $userId = implode((new PersonalAccessToken)->getIdByToken($request['token']));
         $this->query("INSERT INTO {$this->table} (`title`, `text`, `user_id`) VALUES ('{$title}', '{$text}', '{$userId}')");
         $idPost = $this->dbConnection->insert_id;
         $postCreated = $this->find($idPost);
-        return ([
-            'status' => 'success',
-            'message' => 'Post creado con exito',
-            'data' => $postCreated
-        ]);
+        return $postCreated;
     }
 
     public function update($request)
     {
         $post = $this->find($request['id']);
         if(!$post){
-            http_response_code(422);
-            return "Post no encontrado.";
+            JsonResponse::send(false, 'Post no encontrado', 404);
         }
         $fields = [];
         foreach ($request as $key => $value) {
@@ -63,11 +58,9 @@ class Post extends Database{
     {
         $post = $this->find($id);
         if(!$post){
-            http_response_code(422);
-            return "Post no encontrado.";
+            JsonResponse::send(false, 'Post no encontrado', 404);
         }
         $sql = "DELETE FROM {$this->table} WHERE id = {$id}";
         $this->query($sql);
-        return 'Post eliminado correctamente';
     }
 }

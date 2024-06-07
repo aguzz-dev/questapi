@@ -2,8 +2,8 @@
 namespace App\Models;
 
 use Database;
-use App\Controllers\AuthController;
 use Exception;
+use App\Controllers\AuthController;
 
 class User extends Database
 {
@@ -33,11 +33,7 @@ class User extends Database
         $this->query($sql);
         $idUser = $this->dbConnection->insert_id;
         $userData = $this->query("SELECT id, full_name, username, email FROM {$this->table} WHERE id = {$idUser}")->fetch_all(MYSQLI_ASSOC);
-        return [
-            'status' => 'success',
-            'message' => 'Usuario registrado correctamente.',
-            'data' => $userData
-        ];
+        return $userData;
     }
 
     public function login($request)
@@ -96,6 +92,19 @@ class User extends Database
         }
         $sql = "DELETE FROM {$this->table} WHERE id = {$id}";
         $this->query($sql);
-        return 'Usuario eliminado correctamente del sistema';
     }
+/* 
+    public function changePassword($request)
+    {
+        VerifyToken::verifyToken($request->token);
+        $password = password_hash($request->password, PASSWORD_DEFAULT);
+        $userId = (new PersonalAccessToken)->getIdByToken($request->token);
+        $this->query("UPDATE `users` SET `password` = {$password} WHERE id = {$userId}");
+        http_response_code(200);
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Password actualizada con exito'
+        ]);
+        exit;
+    } */
 }

@@ -27,6 +27,7 @@ class Question extends Database
         $this->query("INSERT INTO `{$this->table}` (public_post_id, text) VALUES ({$publicPostId}, '{$text}')");
         http_response_code(200);
         return [
+            'status' => 'success',
             'message' => 'Se ha agregado correctamente la pregunta.',
             'data' => [
                 'idPost' => $publicPostId,
@@ -42,12 +43,14 @@ class Question extends Database
         if(!$isQuestionExist){
             http_response_code(422);
             return [
-                'error' => 'Pregunta no encontrada.'
+                'status' => 'error',
+                'message' => 'Pregunta no encontrada'
             ];
         }
         $this->query("UPDATE {$this->table} SET status = 1 WHERE id = {$request['id']}");
         http_response_code(200);
         return[
+            'status' => 'success',
             'message' => 'Se ha actualizado el estado de la pregunta a Respondida.',
         ];
     } 
