@@ -16,7 +16,6 @@ class PersonalAccessToken extends Database
 
     public function getTokenById($id)
     {
-        $id = implode($id);
         $token = $this->query("SELECT `token` FROM {$this->table} WHERE user_id = {$id} ORDER BY id DESC LIMIT 1;")->fetch_row();
         return  json_encode($token);
     }
