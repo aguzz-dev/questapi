@@ -18,7 +18,7 @@ class PublicPost extends Database
         if(!$post){
             throw new \Exception('Post no encontrado', 404);
         }
-        $userId = $_SESSION['userId'];
+        $userId = (new Post)->find($id)[0]['user_id'];
         $url    = random_int(1000000000, 9999999999).'-'.random_int(10000000, 99999999).'-'.random_int(10000, 99999);
         $this->query("UPDATE `posts` SET status = 1 WHERE id = {$id}");
         $this->query("INSERT INTO `{$this->table}` (`post_id`,`user_id`,`url`) VALUES ('{$id}', '{$userId}', '{$url}')");
@@ -27,13 +27,14 @@ class PublicPost extends Database
 
     public function makePrivatePost($id)
     {
-        $isPostExist = $this->find($id);
-        if(!$isPostExist){
+        $publicPost = $this->find($id);
+        $idPost = $publicPost[0]['post_id'];
+        if(!$publicPost){
             throw new \Exception('Post no encontrado', 404);
         }
-        $post = (new Post)->find($id);
-        $this->query("UPDATE `posts` SET status = 0 WHERE id = {$id}");
+        $this->query("UPDATE `posts` SET `status` = '0' WHERE id = {$idPost}");
         $this->query("DELETE FROM {$this->table} WHERE id = {$id}");
+        $post = (new Post)->find($idPost);
         return $post;
     }
 }

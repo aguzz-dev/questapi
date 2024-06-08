@@ -24,7 +24,7 @@ class PublicPostController
     public function makePrivatePost()
     {
         $request = JsonRequest::get();
-        VerifyToken::verifyToken($request['token']);
+        VerifyToken::verifyToken($request->token);
         try{
             $res = (new PublicPost)->makePrivatePost($request->id);
             JsonResponse::send(true, 'Post ocultado con éxito', 200, $res);
