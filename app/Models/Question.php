@@ -13,6 +13,12 @@ class Question extends Database
         $sql = "SELECT * FROM {$this->table} WHERE id = {$id}";
         return $this->query($sql)->fetch_all(MYSQLI_ASSOC);
     }
+
+    public function getQuestionsByPostId($postId)
+    {
+        return $this->query("SELECT * FROM {$this->table} WHERE public_post_id = $postId")->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function store($request)
     {
         $publicPostId = $request['public_post_id'];

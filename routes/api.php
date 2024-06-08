@@ -26,6 +26,8 @@ Route::post('/change-password', [UserController::class, 'changePassword']);
 Route::post('/share-post', [PublicPostController::class, 'makePublicPost']);
 Route::post('/hide-post', [PublicPostController::class, 'makePrivatePost']);
 
+Route::post('question/get', [QuestionController::class, 'getQuestionById']);
+Route::post('/question', [QuestionController::class, 'getQuestionsByPostId']);
 Route::post('/question/create', [QuestionController::class, 'store']);
 Route::post('/question/answer', [QuestionController::class, 'answerQuestion']);
 

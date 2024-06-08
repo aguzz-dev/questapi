@@ -8,6 +8,22 @@ use App\Helpers\JsonResponse;
 
 class QuestionController
 {
+    public function getQuestionById()
+    {
+        $request = JsonRequest::get();
+        $res = (new Question)->find($request->id);
+        if(empty($res)){
+            JsonResponse::send(false, 'Pregunta no encontrada', 404);
+        }
+        JsonResponse::send(true, 'Solicitud exitosa', 200, $res);
+    }
+
+    public function getQuestionsByPostId()
+    {
+        $postId = JsonRequest::get()->id;
+        return (new Question)->getQuestionsByPostId($postId);
+    }
+
     public function store()
     {
         $request = JsonRequest::get();
