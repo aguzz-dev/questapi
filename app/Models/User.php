@@ -18,17 +18,16 @@ class User extends Database
 
     public function store($request)
     {
-        $values = array_values($request);
         $sql = "INSERT INTO {$this->table} 
                 (`full_name`, 
                 `username`, 
                 `email`, 
                 `password`) 
                 VALUES (
-                    '{$values[0]}',
-                    '{$values[1]}',
-                    '{$values[2]}',
-                    '" . password_hash($values[3], PASSWORD_DEFAULT) . "'
+                    '{$request->full_name}',
+                    '{$request->username}',
+                    '{$request->email}',
+                    '" . password_hash($request->password, PASSWORD_DEFAULT) . "'
                 )";
 
         $this->query($sql);
