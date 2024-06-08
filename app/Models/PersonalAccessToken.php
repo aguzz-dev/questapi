@@ -3,6 +3,7 @@
 namespace  App\Models;
 
 use Database;
+use Exception;
 
 class PersonalAccessToken extends Database
 {
@@ -17,7 +18,7 @@ class PersonalAccessToken extends Database
     public function getTokenById($id)
     {
         $userId = is_array($id) ? implode($id) : $id;
-        $token = $this->query("SELECT `token` FROM {$this->table} WHERE user_id = {$userId} ORDER BY id DESC LIMIT 1;")->fetch_row();
+        $token = $this->query("SELECT `token` FROM {$this->table} WHERE user_id = '{$userId}' ORDER BY 'id' DESC LIMIT 1;")->fetch_row();
         return  json_encode($token);
     }
 
@@ -37,7 +38,7 @@ class PersonalAccessToken extends Database
 
     public function getIdByToken($token)
     {
-        $idByToken = $this->query("SELECT id FROM {$this->table} WHERE `token` = '{$token}'")->fetch_all(MYSQLI_ASSOC);
+        $idByToken = $this->query("SELECT user_id FROM {$this->table} WHERE `token` = '{$token}'")->fetch_all(MYSQLI_ASSOC);
         if(empty($idByToken)){
             http_response_code(401);
             echo json_encode([
@@ -50,20 +51,8 @@ class PersonalAccessToken extends Database
         return $id;
     }
     
-    public function destroyToken($id)
+    public function destroyToken($userId)
     {
-        $userId = $this->query("SELECT user_id FROM {$this->table} WHERE id = {$id}")->fetch_all(MYSQLI_ASSOC)[0];
-        
-        $isTokenExist = $this->getTokenById($userId);
-        if (is_null($isTokenExist)){
-            http_response_code(404);
-            echo json_encode([
-                'status' => 'error',
-                'message' => 'Session no encontrada'
-            ]);
-            exit;
-        }
-        $userId = implode($userId);
         $this->query("DELETE FROM `personal_access_tokens` WHERE `user_id` = '{$userId}'");
     }
 }
