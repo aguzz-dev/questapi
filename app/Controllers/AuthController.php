@@ -19,7 +19,7 @@ class AuthController {
             $data = (new User)->login($request);
             JsonResponse::send(true, 'Inicio de sesión exitoso', 200 , $data);
         } catch (\Exception $e) {
-            JsonResponse::send(false, $e->getMessage(), $e->getCode());
+            JsonResponse::exception($e);
         }
     }
 

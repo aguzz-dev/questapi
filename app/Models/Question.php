@@ -18,40 +18,24 @@ class Question extends Database
         $publicPostId = $request['public_post_id'];
         $isPublicPostExist = (new PublicPost)->find($publicPostId);
         if (!$isPublicPostExist) {
-            http_response_code(422);
-            return[
-                'error' => 'Post público no encontrado.'
-            ];
+            throw new \Exception('Post público no encontrado', 404);
         }
         $text = $request['text'];
         $this->query("INSERT INTO `{$this->table}` (public_post_id, text) VALUES ({$publicPostId}, '{$text}')");
-        http_response_code(200);
         return [
-            'status' => 'success',
-            'message' => 'Se ha agregado correctamente la pregunta.',
-            'data' => [
-                'idPost' => $publicPostId,
-                'text' => $text
-            ],
+            'id' => $publicPostId, 
+            'text' => $text
         ];
     }
 
     public function answerQuestion($request)
     {
         VerifyToken::verifyToken($request['token']);
-        $isQuestionExist = $this->find($request['id']);
-        if(!$isQuestionExist){
-            http_response_code(422);
-            return [
-                'status' => 'error',
-                'message' => 'Pregunta no encontrada'
-            ];
+        $question = $this->find($request['id']);
+        if(!$question){
+            throw new \Exception('Pregunta no encontrada', 404);
         }
         $this->query("UPDATE {$this->table} SET status = 1 WHERE id = {$request['id']}");
-        http_response_code(200);
-        return[
-            'status' => 'success',
-            'message' => 'Se ha actualizado el estado de la pregunta a Respondida.',
-        ];
+        return $question;
     } 
 }

@@ -26,7 +26,7 @@ class UserController
             JsonResponse::send(true, 'Usuario actualizado con éxito', 200, $res);
         } 
         catch (Exception $e) {
-            JsonResponse::send(false, $e->getMessage(), $e->getCode());
+            JsonResponse::exception($e);
         }
     }
 
@@ -43,7 +43,7 @@ class UserController
             JsonResponse::send(true, 'Usuario eliminado correctamente del sistema');
         }
         catch(Exception $e){
-            JsonResponse::send(false, $e->getMessage(), $e->getCode());
+            JsonResponse::exception($e);
         }
     }
 

@@ -31,4 +31,15 @@ class JsonResponse
         ]);
         exit;
     }
+
+    public static function exception($e)
+    {
+        header('Content-Type: application/json');
+        http_response_code($e->getCode());
+        echo json_encode([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ]);
+        exit;
+    }
 }

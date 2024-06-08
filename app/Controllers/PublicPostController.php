@@ -16,7 +16,7 @@ class PublicPostController
             $res = (new PublicPost)->makePublicPost($request['id']);
             JsonResponse::send(true, 'Post publicado con éxito', 200, $res);
         }catch(Exception $e){
-            JsonResponse::send(false, $e->getMessage(), $e->getCode());
+            JsonResponse::exception($e);
         }
     }
 
@@ -28,7 +28,7 @@ class PublicPostController
             $res = (new PublicPost)->makePrivatePost($request['id']);
             JsonResponse::send(true, 'Post ocultado con éxito', 200, $res);
         }catch(Exception $e){
-            JsonResponse::send(false, $e->getMessage(), $e->getCode());
+            JsonResponse::exception($e);
         }
     }
 }

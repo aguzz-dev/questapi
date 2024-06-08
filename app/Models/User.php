@@ -61,7 +61,6 @@ class User extends Database
             'email' => $user['email']
         ];
         return [
-            'status' => 'success',
             'token' => $token,
             'user' => $userData
         ];
