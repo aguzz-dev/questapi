@@ -47,10 +47,14 @@ class UserController
         }
     }
 
-/*     public function changePassword()
+    public function changePassword()
     {
         $request = json_decode(file_get_contents('php://input', true));
-        $res = (new User)->changePassword($request);
-        return $res;
-    } */
+        try{
+            (new User)->changePassword($request);
+            JsonResponse::send(true, 'Password actualizada con éxito');
+        }catch(Exception $e){
+            JsonResponse::exception($e);
+        }
+    }
 }

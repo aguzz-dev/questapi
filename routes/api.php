@@ -21,6 +21,8 @@ Route::post('/user/create', [UserController::class, 'store']);
 Route::put('/user/update', [UserController::class, 'update']);
 Route::delete('/user/destroy', [UserController::class, 'destroy']);
 
+Route::post('/change-password', [UserController::class, 'changePassword']);
+
 Route::post('/share-post', [PublicPostController::class, 'makePublicPost']);
 Route::post('/hide-post', [PublicPostController::class, 'makePrivatePost']);
 

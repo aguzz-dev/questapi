@@ -3,6 +3,7 @@ namespace App\Models;
 
 use Database;
 use Exception;
+use App\Middleware\VerifyToken;
 use App\Controllers\AuthController;
 
 class User extends Database
@@ -92,18 +93,15 @@ class User extends Database
         $sql = "DELETE FROM {$this->table} WHERE id = {$id}";
         $this->query($sql);
     }
-/* 
+
     public function changePassword($request)
     {
         VerifyToken::verifyToken($request->token);
         $password = password_hash($request->password, PASSWORD_DEFAULT);
-        $userId = (new PersonalAccessToken)->getIdByToken($request->token);
-        $this->query("UPDATE `users` SET `password` = {$password} WHERE id = {$userId}");
-        http_response_code(200);
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Password actualizada con exito'
-        ]);
-        exit;
-    } */
+        $isUserExist = $this->find($request->id);
+        if (!$isUserExist){
+            throw new Exception('Usuario no encontrado', 404);
+        }
+        $this->query("UPDATE `users` SET `password` = '{$password}' WHERE id = '{$request->id}'");
+    } 
 }
