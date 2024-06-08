@@ -7,11 +7,9 @@ use App\Helpers\JsonResponse;
 use App\Models\PersonalAccessToken;
 use App\Models\User;
 use App\Request\LoginRequest;
-use \Firebase\JWT\JWT;
 
-class AuthController {
-    private static $secretKey = "1111";
-
+class AuthController 
+{
     public function login()
     {
         $request = JsonRequest::get();
@@ -42,19 +40,8 @@ class AuthController {
         ];
         JsonResponse::send(true, 'Sesión validada con éxito', 200, $userData);
     }
-
-    public static function generateToken($userData) {
-        $issuedAt = time();
-        $expirationTime = $issuedAt + 3600 * 24;
-        $payload = array(
-            'iat' => $issuedAt,
-            'exp' => $expirationTime,
-            'data' => $userData
-        );
-        return JWT::encode($payload, self::$secretKey, 'HS256');
-    }
     
-    public function destroyToken()
+    public function logout()
     {
         $request = JsonRequest::get();
         $userId = (new PersonalAccessToken)->getIdByToken($request->token);

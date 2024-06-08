@@ -1,10 +1,10 @@
 <?php
 namespace App\Models;
 
+use App\Helpers\GenerateToken;
 use Database;
 use Exception;
 use App\Middleware\VerifyToken;
-use App\Controllers\AuthController;
 
 class User extends Database
 {
@@ -49,7 +49,7 @@ class User extends Database
         if (!password_verify($password, $user['password'])) {
             throw new Exception('Credenciales incorrectas', 422);
         }
-        $token = AuthController::generateToken([
+        $token = GenerateToken::auth([
             'id' => $user['id'],
             'username' => $user['username'],
             'email' => $user['email']

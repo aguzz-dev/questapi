@@ -2,7 +2,6 @@
 namespace App\Models;
 
 use App\Helpers\JsonResponse;
-use App\Middleware\VerifyToken;
 use Database;
 
 class Post extends Database{
