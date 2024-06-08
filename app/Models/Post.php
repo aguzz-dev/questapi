@@ -13,6 +13,11 @@ class Post extends Database{
         return $this->query($sql)->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function getPostId($publicPostId)
+    {
+        return implode($this->query("SELECT `id` FROM {$this->table} WHERE id = '{$publicPostId}'")->fetch_all(MYSQLI_ASSOC)[0]);
+    }
+
     public function getAllPosts($userId):array
     {
         $posts = [];

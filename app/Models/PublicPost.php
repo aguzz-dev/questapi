@@ -12,6 +12,7 @@ class PublicPost extends Database
         $sql = "SELECT * FROM {$this->table} WHERE id = {$id}";
         return $this->query($sql)->fetch_all(MYSQLI_ASSOC);
     }
+
     public function makePublicPost($id)
     {
         $post = (new Post)->find($id);

@@ -6,6 +6,8 @@ use Database;
 
 class Question extends Database
 {
+    const NO_RESPONDIDA = 0;
+    const RESPONDIDA = 1;
     protected $table = 'questions';
 
     public function find($id)
@@ -21,27 +23,33 @@ class Question extends Database
 
     public function store($request)
     {
-        $publicPostId = $request['public_post_id'];
-        $isPublicPostExist = (new PublicPost)->find($publicPostId);
+        $publicPostId = $request->id_post;
+        $isPublicPostExist = (new Post)->getPostId($publicPostId);
         if (!$isPublicPostExist) {
             throw new \Exception('Post público no encontrado', 404);
         }
-        $text = $request['text'];
+        $text = $request->text;
         $this->query("INSERT INTO `{$this->table}` (public_post_id, text) VALUES ({$publicPostId}, '{$text}')");
         return [
-            'id' => $publicPostId, 
-            'text' => $text
+            'id' => $this->dbConnection->insert_id,
+            'text' => $text,
+            'id_post' => $publicPostId
         ];
     }
 
     public function answerQuestion($request)
     {
-        VerifyToken::verifyToken($request['token']);
-        $question = $this->find($request['id']);
+        VerifyToken::verifyToken($request->token);
+        $question = $this->find($request->id)[0];
         if(!$question){
             throw new \Exception('Pregunta no encontrada', 404);
         }
-        $this->query("UPDATE {$this->table} SET status = 1 WHERE id = {$request['id']}");
-        return $question;
+        $this->query("UPDATE {$this->table} SET status = 1 WHERE id = {$request->id}");
+        return [
+            'id' => $question['id'],
+            'text' => $question['text'],
+            'post_id' => $question['public_post_id'],
+            'status' => Question::RESPONDIDA
+        ];
     } 
 }
