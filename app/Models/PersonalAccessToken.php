@@ -16,7 +16,8 @@ class PersonalAccessToken extends Database
 
     public function getTokenById($id)
     {
-        $token = $this->query("SELECT `token` FROM {$this->table} WHERE user_id = {$id} ORDER BY id DESC LIMIT 1;")->fetch_row();
+        $userId = is_array($id) ? implode($id) : $id;
+        $token = $this->query("SELECT `token` FROM {$this->table} WHERE user_id = {$userId} ORDER BY id DESC LIMIT 1;")->fetch_row();
         return  json_encode($token);
     }
 
@@ -36,8 +37,8 @@ class PersonalAccessToken extends Database
 
     public function getIdByToken($token)
     {
-        $id = $this->query("SELECT id FROM {$this->table} WHERE `token` = '{$token}'")->fetch_all(MYSQLI_ASSOC);
-        if(empty($id)){
+        $idByToken = $this->query("SELECT id FROM {$this->table} WHERE `token` = '{$token}'")->fetch_all(MYSQLI_ASSOC);
+        if(empty($idByToken)){
             http_response_code(401);
             echo json_encode([
                 'status' => 'error',
@@ -45,14 +46,13 @@ class PersonalAccessToken extends Database
             ]);
             exit;
         }
-        http_response_code(200);
-        return $id[0];
+        $id = implode($idByToken[0]);
+        return $id;
     }
     
     public function destroyToken($id)
     {
-        $sessionId = implode($id);
-        $userId = $this->query("SELECT user_id FROM {$this->table} WHERE id = {$sessionId}")->fetch_all(MYSQLI_ASSOC)[0];
+        $userId = $this->query("SELECT user_id FROM {$this->table} WHERE id = {$id}")->fetch_all(MYSQLI_ASSOC)[0];
         
         $isTokenExist = $this->getTokenById($userId);
         if (is_null($isTokenExist)){

@@ -39,8 +39,8 @@ class User extends Database
 
     public function login($request)
     {
-        $email = $request['email'];
-        $password = $request['password'];
+        $email = $request->email;
+        $password = $request->password;
 
         $user = $this->query("SELECT * FROM {$this->table} WHERE email = '{$email}' LIMIT 1")->fetch_assoc();
         if (is_null($user)) {

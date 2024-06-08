@@ -2,6 +2,7 @@
 namespace App\Controllers;
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+use App\Helpers\JsonRequest;
 use App\Helpers\JsonResponse;
 use App\Models\PersonalAccessToken;
 use App\Models\User;
@@ -13,7 +14,7 @@ class AuthController {
 
     public function login()
     {
-        $request = json_decode(file_get_contents("php://input"), true);
+        $request = JsonRequest::get();
         LoginRequest::validate($request);
         try {
             $data = (new User)->login($request);
@@ -25,7 +26,7 @@ class AuthController {
 
     public function checkSession()
     {
-        $request = json_decode(file_get_contents("php://input"));
+        $request = JsonRequest::get();
         $userToken = (new PersonalAccessToken)->getTokenById($request->id);
         $charsToRemove = ['[','"',']'];
         $token = str_replace($charsToRemove, '', $userToken);
@@ -55,7 +56,7 @@ class AuthController {
     
     public function destroyToken()
     {
-        $request = json_decode(file_get_contents("php://input"));
+        $request = JsonRequest::get();
         $userId = (new PersonalAccessToken)->getIdByToken($request->token);
         (new PersonalAccessToken)->destroyToken($userId);
         JsonResponse::send(true, 'Sesión eliminada con éxito');

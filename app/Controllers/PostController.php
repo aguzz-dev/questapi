@@ -1,8 +1,10 @@
 <?php
 namespace App\Controllers;
 
-use App\Helpers\JsonResponse;
 use App\Models\Post;
+use App\Helpers\JsonRequest;
+use App\Helpers\JsonResponse;
+use App\Middleware\VerifyToken;
 
 class PostController
 {
@@ -14,21 +16,23 @@ class PostController
 
     public function store()
     {
-        $request = json_decode(file_get_contents("php://input"), true);
+        $request = JsonRequest::get();
+        VerifyToken::verifyToken($request->token);
         $res = (new Post)->store($request);
         JsonResponse::send(true, 'Post creado con éxito', 200, $res);
     }
 
     public function update()
     {
-        $request = json_decode(file_get_contents("php://input"), true);
+        $request = JsonRequest::get();
+        VerifyToken::verifyToken($request->token);
         $res = (new Post)->update($request);
         JsonResponse::send(true, 'Post actualizado con éxito', 200, $res);
     }
 
     public function destroy()
     {
-        $id = implode(json_decode(file_get_contents("php://input"), true));
+        $id = JsonRequest::get()->id;
         (new Post)->destroy($id);
         JsonResponse::send(true, 'Post eliminado correctamente');
     }

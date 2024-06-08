@@ -1,17 +1,18 @@
 <?php
 namespace App\Controllers;
 
-use App\Helpers\JsonResponse;
-use App\Models\User;
-use App\Request\RegisterUserRequest;
-use App\Request\UpdateUserRequest;
 use Exception;
+use App\Models\User;
+use App\Helpers\JsonRequest;
+use App\Helpers\JsonResponse;
+use App\Request\UpdateUserRequest;
+use App\Request\RegisterUserRequest;
 
 class UserController
 {
     public function store()
     {
-        $request = json_decode(file_get_contents("php://input"), true);
+        $request = JsonRequest::get();
         RegisterUserRequest::validate($request);
         $res = (new User)->store($request);
         jsonResponse::send(true, 'Usuario registrado correctamente', 200, $res);
@@ -19,7 +20,7 @@ class UserController
 
     public function update()
     {
-        $request = json_decode(file_get_contents("php://input"), true);
+        $request = JsonRequest::get();
         UpdateUserRequest::validate($request);
         try {
             $res = (new User)->update($request);
@@ -32,7 +33,7 @@ class UserController
 
     public function destroy()
     {
-        $request = json_decode(file_get_contents("php://input"), true);
+        $request = JsonRequest::get();
         if(!isset($request->id)){
             http_response_code(422);
             echo json_encode(['El campo id es obligatorio']);
@@ -49,7 +50,7 @@ class UserController
 
     public function changePassword()
     {
-        $request = json_decode(file_get_contents('php://input', true));
+        $request = JsonRequest::get();
         try{
             (new User)->changePassword($request);
             JsonResponse::send(true, 'Password actualizada con éxito');

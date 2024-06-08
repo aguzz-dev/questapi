@@ -28,10 +28,9 @@ class Post extends Database{
 
     public function store($request)
     {
-        VerifyToken::verifyToken($request['token']);
-        $title  = $request['title'];
-        $text   = $request['text'];
-        $userId = implode((new PersonalAccessToken)->getIdByToken($request['token']));
+        $title  = $request->title;
+        $text   = $request->text;
+        $userId = (new PersonalAccessToken)->getIdByToken($request->token);
         $this->query("INSERT INTO {$this->table} (`title`, `text`, `user_id`) VALUES ('{$title}', '{$text}', '{$userId}')");
         $idPost = $this->dbConnection->insert_id;
         $postCreated = $this->find($idPost);
@@ -40,7 +39,7 @@ class Post extends Database{
 
     public function update($request)
     {
-        $post = $this->find($request['id']);
+        $post = $this->find($request->id);
         if(!$post){
             JsonResponse::send(false, 'Post no encontrado', 404);
         }
@@ -49,7 +48,7 @@ class Post extends Database{
             $fields[] = "{$key} = '{$value}'";
         }
         $fields = implode(', ', $fields);
-        $sql = "UPDATE {$this->table} SET {$fields} WHERE id = {$request['id']}";
+        $sql = "UPDATE {$this->table} SET {$fields} WHERE id = {$request->id}";
         $this->query($sql);
         return $this->find($request['id']);
     }

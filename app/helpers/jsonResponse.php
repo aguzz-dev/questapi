@@ -7,28 +7,19 @@ class JsonResponse
     public static function send($status, $message, $status_code = 200, $data = null)
     {
         header('Content-Type: application/json');
-        if (!$status){
-            http_response_code($status_code);
-            echo json_encode([
-                'status' => 'error',
-                'message' => $message
-            ]);
-            exit;
-        }
-        if (is_null($data)){
-            http_response_code($status_code);
-            echo json_encode([
-                'status' => 'success',
-                'message' => $message
-            ]);
-            exit;
-        }
         http_response_code($status_code);
-        echo json_encode([
-            'status' => 'success',
-            'message' => $message,
-            'data' => $data
-        ]);
+        if(is_null($data)){
+            echo json_encode([
+                'status' => $status ? 'success' : 'error',
+                'message' => $message
+            ]);
+        }else{
+            echo json_encode([
+                'status' => $status ? 'success' : 'error',
+                'message' => $message,
+                'data' => $data
+            ]);
+        }
         exit;
     }
 

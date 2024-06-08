@@ -8,7 +8,7 @@ class LoginRequest implements Request
     {
         $errors = [];
 
-        if (!filter_var($request['email'], FILTER_VALIDATE_EMAIL)){
+        if (!filter_var($request->email, FILTER_VALIDATE_EMAIL)){
             array_push($errors, 'Email inválido');
         }
         if (!empty($errors)){
