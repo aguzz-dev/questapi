@@ -13,10 +13,10 @@ class Post extends Database{
         return $this->query($sql)->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getAllPosts():array
+    public function getAllPosts($userId):array
     {
         $posts = [];
-        $sql = "SELECT * FROM " . $this->table;
+        $sql = "SELECT * FROM " . $this->table. " WHERE user_id = '{$userId}'" ;
         $allPosts = $this->query($sql);
 
         foreach($allPosts as $post){

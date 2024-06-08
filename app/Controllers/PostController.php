@@ -10,7 +10,8 @@ class PostController
 {
     public function index():array
     {
-        $res = (new Post)->getAllPosts();
+        $userId = JsonRequest::get()->id;
+        $res = (new Post)->getAllPosts($userId);
         return $res;
     }
 

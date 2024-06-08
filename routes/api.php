@@ -12,7 +12,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/check-session', [AuthController::class, 'checkSession']);
 Route::post('/destroy-session', [AuthController::class, 'logout']);
 
-Route::get('/posts', [PostController::class, 'index']);
+Route::post('/posts', [PostController::class, 'index']);
 Route::post('/posts/create', [PostController::class, 'store']);
 Route::put('/posts', [PostController::class, 'update']);
 Route::delete('/posts', [PostController::class, 'destroy']);
