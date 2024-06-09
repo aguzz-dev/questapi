@@ -33,8 +33,9 @@ class PostController
 
     public function destroy()
     {
-        $id = JsonRequest::get()->id;
-        (new Post)->destroy($id);
+        $request = JsonRequest::get();
+        VerifyToken::verifyToken($request->token);
+        (new Post)->destroy($request->id);
         JsonResponse::send(true, 'Post eliminado correctamente');
     }
 }
