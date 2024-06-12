@@ -51,10 +51,11 @@ class Post extends Database{
         foreach ($request as $key => $value) {
             $fields[] = "{$key} = '{$value}'";
         }
+        unset($fields[0]);
         $fields = implode(', ', $fields);
         $sql = "UPDATE {$this->table} SET {$fields} WHERE id = {$request->id}";
         $this->query($sql);
-        return $this->find($request['id']);
+        return $this->find($request->id);
     }
 
     public function destroy($id)
