@@ -4,14 +4,15 @@ namespace App\Models;
 use App\Helpers\JsonResponse;
 use app\Database;
 
-class Post extends Database{
+class Post extends Database
+{
     protected $table = 'posts';
 
     const DEFAULT_ASSET = 0;
-    public function find($id):array
+
+    public function find($id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = {$id}";
-        return $this->query($sql)->fetch_all(MYSQLI_ASSOC);
+        return $this->find($id);
     }
 
     public function getPostId($publicPostId)

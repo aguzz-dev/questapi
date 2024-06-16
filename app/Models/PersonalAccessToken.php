@@ -8,10 +8,9 @@ class PersonalAccessToken extends Database
 {
     protected $table = 'personal_access_tokens';
 
-    public function find($token):array
+    public function find($id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE token = {$token}";
-        return $this->query($sql)->fetch_all(MYSQLI_ASSOC);
+        return $this->find($id);
     }
 
     public function getTokenById($id)

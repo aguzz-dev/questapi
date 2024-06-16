@@ -1,10 +1,13 @@
 <?php
 
 namespace App;
+use App\Traits\FindTrait;
 
 require_once('../config.php');
 
-class Database{
+class Database
+{
+    use FindTrait;
     public $dbConnection;
     public function __construct()
     {

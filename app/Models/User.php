@@ -10,10 +10,9 @@ class User extends Database
 {
     protected $table = 'users';
 
-    public function find($id):array
+    public function find($id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = {$id}";
-        return $this->query($sql)->fetch_all(MYSQLI_ASSOC);
+        return $this->find($id);
     }
 
     public function store($request)
