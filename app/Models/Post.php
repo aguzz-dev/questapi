@@ -2,11 +2,12 @@
 namespace App\Models;
 
 use App\Helpers\JsonResponse;
-use Database;
+use app\Database;
 
 class Post extends Database{
     protected $table = 'posts';
 
+    const DEFAULT_ASSET = 0;
     public function find($id):array
     {
         $sql = "SELECT * FROM {$this->table} WHERE id = {$id}";
@@ -33,9 +34,8 @@ class Post extends Database{
     public function store($request)
     {
         $title  = $request->title;
-        $text   = $request->text;
         $userId = (new PersonalAccessToken)->getIdByToken($request->token);
-        $this->query("INSERT INTO {$this->table} (`title`, `text`, `user_id`) VALUES ('{$title}', '{$text}', '{$userId}')");
+        $this->query("INSERT INTO {$this->table} (`title`, `asset_id`, `user_id`) VALUES ('{$title}', '{$request->asset_id}', '{$userId}')");
         $idPost = $this->dbConnection->insert_id;
         $postCreated = $this->find($idPost);
         return $postCreated;
