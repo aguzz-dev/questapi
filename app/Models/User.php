@@ -2,7 +2,7 @@
 namespace App\Models;
 
 use App\Helpers\GenerateToken;
-use Database;
+use app\Database;
 use Exception;
 use App\Middleware\VerifyToken;
 

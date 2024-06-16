@@ -2,8 +2,7 @@
 
 namespace  App\Models;
 
-use Database;
-use Exception;
+use app\Database;
 
 class PersonalAccessToken extends Database
 {

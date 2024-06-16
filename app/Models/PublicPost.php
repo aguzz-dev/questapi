@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 
-use Database;
+use app\Database;
 
 class PublicPost extends Database
 {

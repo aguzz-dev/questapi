@@ -1,5 +1,9 @@
 <?php
-require_once('config.php');
+
+namespace App;
+
+require_once('../config.php');
+
 class Database{
     public $dbConnection;
     public function __construct()
@@ -16,7 +20,7 @@ class Database{
     {
         $res = mysqli_query($this->dbConnection, $sql);
         if (!$res) {
-            throw new Exception("Error en la consulta: " . mysqli_error($this->dbConnection));
+            throw new \Exception("Error en la consulta: " . mysqli_error($this->dbConnection));
         }
         return $res;
     }

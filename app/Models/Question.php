@@ -2,7 +2,7 @@
 namespace App\Models;
 
 use App\Middleware\VerifyToken;
-use Database;
+use app\Database;
 
 class Question extends Database
 {
