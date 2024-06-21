@@ -38,4 +38,12 @@ class AssetController
         }
     }
 
+    public function checkAssetExpired()
+    {
+        $request = JsonRequest::get();
+        $res = (new AssetUser)->checkAssetExpired($request->id);
+        return empty($res)  ? JsonResponse::send(true, 'El usuario no tiene assets expirados')
+                            : JsonResponse::send(true, 'Se eliminaron los siguientes assets expirados del usuario con ID '.$request->id, 200, $res);
+    }
+
 }
