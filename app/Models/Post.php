@@ -3,21 +3,23 @@ namespace App\Models;
 
 use App\Helpers\JsonResponse;
 use app\Database;
+use App\Traits\FindTrait;
 
 class Post extends Database
 {
+    use FindTrait;
     protected $table = 'posts';
 
     const DEFAULT_ASSET = 0;
 
-    public function find($id)
+    public function findById($id)
     {
         return $this->find($id);
     }
 
     public function getPostId($publicPostId)
     {
-        return implode($this->query("SELECT `id` FROM {$this->table} WHERE id = '{$publicPostId}'")->fetch_all(MYSQLI_ASSOC)[0]);
+        return $this->query("SELECT `id` FROM {$this->table} WHERE id = '{$publicPostId}'")->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getAllPosts($userId):array

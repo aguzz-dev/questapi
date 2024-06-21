@@ -10,7 +10,7 @@ class User extends Database
 {
     protected $table = 'users';
 
-    public function find($id)
+    public function findById($id)
     {
         return $this->find($id);
     }
@@ -94,7 +94,7 @@ class User extends Database
 
     public function changePassword($request)
     {
-        VerifyToken::verifyToken($request->token);
+        VerifyToken::jwt($request->token);
         $password = password_hash($request->password, PASSWORD_DEFAULT);
         $isUserExist = $this->find($request->id);
         if (!$isUserExist){

@@ -8,7 +8,7 @@ class PersonalAccessToken extends Database
 {
     protected $table = 'personal_access_tokens';
 
-    public function find($id)
+    public function findById($id)
     {
         return $this->find($id);
     }

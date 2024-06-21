@@ -10,7 +10,7 @@ class Question extends Database
     const RESPONDIDA = 1;
     protected $table = 'questions';
 
-    public function find($id)
+    public function findById($id)
     {
         return $this->find($id);
     }
@@ -38,7 +38,7 @@ class Question extends Database
 
     public function answerQuestion($request)
     {
-        VerifyToken::verifyToken($request->token);
+        VerifyToken::jwt($request->token);
         $question = $this->find($request->id)[0];
         if(!$question){
             throw new \Exception('Pregunta no encontrada', 404);

@@ -18,7 +18,7 @@ class PostController
     public function store()
     {
         $request = JsonRequest::get();
-        VerifyToken::verifyToken($request->token);
+        VerifyToken::jwt($request->token);
         $res = (new Post)->store($request);
         JsonResponse::send(true, 'Post creado con éxito', 200, $res);
     }
@@ -26,7 +26,7 @@ class PostController
     public function update()
     {
         $request = JsonRequest::get();
-        VerifyToken::verifyToken($request->token);
+        VerifyToken::jwt($request->token);
         $res = (new Post)->update($request);
         JsonResponse::send(true, 'Post actualizado con éxito', 200, $res);
     }
@@ -34,7 +34,7 @@ class PostController
     public function destroy()
     {
         $request = JsonRequest::get();
-        VerifyToken::verifyToken($request->token);
+        VerifyToken::jwt($request->token);
         (new Post)->destroy($request->id);
         JsonResponse::send(true, 'Post eliminado correctamente');
     }

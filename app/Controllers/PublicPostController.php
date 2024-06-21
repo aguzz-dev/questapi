@@ -12,7 +12,7 @@ class PublicPostController
     public function makePublicPost()
     {
         $request = JsonRequest::get();
-        VerifyToken::verifyToken($request->token);
+        VerifyToken::jwt($request->token);
         try{
             $res = (new PublicPost)->makePublicPost($request->id);
             JsonResponse::send(true, 'Post publicado con éxito', 200, $res);
@@ -24,7 +24,7 @@ class PublicPostController
     public function makePrivatePost()
     {
         $request = JsonRequest::get();
-        VerifyToken::verifyToken($request->token);
+        VerifyToken::jwt($request->token);
         try{
             $res = (new PublicPost)->makePrivatePost($request->id);
             JsonResponse::send(true, 'Post ocultado con éxito', 200, $res);
