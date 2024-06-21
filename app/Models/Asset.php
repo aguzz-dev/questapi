@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Database;
+use App\Traits\FindTrait;
 use App\Traits\getAllTrait;
 
 class Asset extends Database 
@@ -10,7 +11,13 @@ class Asset extends Database
     protected $table = 'assets';
 
     use getAllTrait;
+    use FindTrait;
 
+    public function findById($id)
+    {
+        return $this->find($id);
+    }
+    
     public function getAllAssets()
     {
         return $this->getAll();
