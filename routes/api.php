@@ -33,9 +33,8 @@ Route::post('/question/create', [QuestionController::class, 'store']);
 Route::post('/question/answer', [QuestionController::class, 'answerQuestion']);
 
 Route::post('/assets/buy', [AssetController::class, 'buyAsset']);
-Route::post('/assets/check', [AssetController::class, 'checkAssetExpired']);
+Route::post('/assets/check', [AssetController::class, 'checkAssetExpired($userId)']);
 Route::post('/assets/id', [AssetController::class, 'getUserAssetsByUserId']);
 Route::post('/assets', [AssetController::class, 'getAllAssets']);
-
 
 Route::dispatch();
