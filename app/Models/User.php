@@ -94,7 +94,7 @@ class User extends Database
 
     public function changePassword($request)
     {
-        VerifyToken::jwt($request->token);
+        VerifyToken::jwt();
         $password = password_hash($request->password, PASSWORD_DEFAULT);
         $isUserExist = $this->find($request->id);
         if (!$isUserExist){
