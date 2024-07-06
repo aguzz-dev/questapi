@@ -5,6 +5,7 @@ use Exception;
 use App\Models\User;
 use App\Helpers\JsonRequest;
 use App\Helpers\JsonResponse;
+use App\Middleware\VerifyToken;
 use App\Request\UpdateUserRequest;
 use App\Request\RegisterUserRequest;
 
@@ -20,6 +21,7 @@ class UserController
 
     public function update()
     {
+        VerifyToken::jwt();
         $request = JsonRequest::get();
         UpdateUserRequest::validate($request);
         try {
@@ -33,6 +35,7 @@ class UserController
 
     public function destroy()
     {
+        VerifyToken::jwt();
         $request = JsonRequest::get();
         if(!isset($request->id)){
             http_response_code(422);
@@ -50,6 +53,7 @@ class UserController
 
     public function changePassword()
     {
+        VerifyToken::jwt();
         $request = JsonRequest::get();
         try{
             (new User)->changePassword($request);
