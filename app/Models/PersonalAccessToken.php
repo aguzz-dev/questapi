@@ -22,8 +22,8 @@ class PersonalAccessToken extends Database
 
     public function validateToken($token)
     {
-        $token = $this->query("SELECT * FROM {$this->table} WHERE `token` = '{$token}'")->fetch_all(MYSQLI_ASSOC);
-        if(empty($token)){
+        $existToken = $this->query("SELECT * FROM {$this->table} WHERE `token` = '{$token}'")->fetch_all(MYSQLI_ASSOC);
+        if(!$existToken){
             http_response_code(401);
             echo json_encode([
                 'status' => 'error',

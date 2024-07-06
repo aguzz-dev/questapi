@@ -1,6 +1,8 @@
 <?php
 namespace Lib;
+
 require_once '../config.php';
+use App\Models\PublicPost;
 
 class Route
 {
@@ -35,10 +37,18 @@ class Route
         $uri = $_SERVER['REQUEST_URI'];
         $uri = trim($uri, '/');
         $uri = str_replace(APP_NAME.'/', '', $uri);
-    
+        $postUrl = (new PublicPost)->getAllUrls();
         $method = $_SERVER['REQUEST_METHOD'];
         
         foreach(self::$routes[$method] as $route => $callback){
+            if ($method == 'GET' && ($uri == 'login' || $uri == 'register')){
+                include '../app/views/Download.php';
+                exit;
+            }
+            if ($method == 'GET' && in_array($uri, $postUrl)) {
+                include '../app/views/Index.php';
+                exit;
+            }
             if ($route == $uri) {
                 if (is_callable($callback)) {
                     $callback();
@@ -52,8 +62,7 @@ class Route
                 return;
             }
         }
-        http_response_code(404);
-        echo json_encode(["error" => "Ruta no encontrada"]);
+        include '../app/views/NotFound.php';
     }
     
     

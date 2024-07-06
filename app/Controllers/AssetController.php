@@ -13,23 +13,22 @@ class AssetController
 {
     public function getAllAssets()
     {
-        $request = JsonRequest::get();
-        VerifyToken::jwt($request->token);
+        VerifyToken::jwt();
         JsonResponse::send(true, 'Solicitud exitosa, assets existentes:', 200, (new Asset)->getAllAssets()); 
     }
 
     public function getUserAssetsByUserId()
     {
+        VerifyToken::jwt();
         $request = JsonRequest::get();
-        VerifyToken::jwt($request->token);
         $res = (new Asset)->getUserAssetsByUserId($request->id);
         JsonResponse::send(true, 'Assets pertenecientes al usuario con ID '.$request->id, 200, $res);
     }
 
     public function buyAsset()
     {
+        VerifyToken::jwt();
         $request = JsonRequest::get();
-        VerifyToken::jwt($request->token);
         try{
             (new AssetUser)->buyAsset($request->asset_id, $request->user_id);
             JsonResponse::send(true, 'Asset comprado con éxito');
@@ -40,6 +39,7 @@ class AssetController
 
     public function checkAssetExpired()
     {
+        VerifyToken::jwt();
         $request = JsonRequest::get();
         $res = (new AssetUser)->checkAssetExpired($request->id);
         return empty($res)  ? JsonResponse::send(true, 'El usuario no tiene assets expirados')

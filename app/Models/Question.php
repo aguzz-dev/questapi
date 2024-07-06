@@ -17,7 +17,7 @@ class Question extends Database
 
     public function getQuestionsByPostId($postId)
     {
-        return $this->query("SELECT * FROM {$this->table} WHERE public_post_id = $postId")->fetch_all(MYSQLI_ASSOC);
+        return $this->query("SELECT * FROM {$this->table} WHERE post_id = $postId")->fetch_all(MYSQLI_ASSOC);
     }
 
     public function store($request)
@@ -28,7 +28,8 @@ class Question extends Database
             throw new \Exception('Post público no encontrado', 404);
         }
         $text = $request->text;
-        $this->query("INSERT INTO `{$this->table}` (public_post_id, text) VALUES ({$publicPostId}, '{$text}')");
+        $hint = $request->hint;
+        $this->query("INSERT INTO `{$this->table}` (post_id, text, hint) VALUES ({$publicPostId}, '{$text}', '{$hint}')");
         return [
             'id' => $this->dbConnection->insert_id,
             'text' => $text,
@@ -38,7 +39,7 @@ class Question extends Database
 
     public function answerQuestion($request)
     {
-        VerifyToken::jwt($request->token);
+        VerifyToken::jwt();
         $question = $this->find($request->id)[0];
         if(!$question){
             throw new \Exception('Pregunta no encontrada', 404);
@@ -47,8 +48,8 @@ class Question extends Database
         return [
             'id' => $question['id'],
             'text' => $question['text'],
-            'post_id' => $question['public_post_id'],
+            'post_id' => $question['post_id'],
             'status' => Question::RESPONDIDA
         ];
-    } 
+    }
 }

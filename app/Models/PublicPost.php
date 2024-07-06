@@ -3,6 +3,7 @@ namespace App\Models;
 
 use app\Database;
 use App\Traits\FindTrait;
+use App\Helpers\CreateRandomUrl;
 
 class PublicPost extends Database
 {
@@ -14,6 +15,21 @@ class PublicPost extends Database
         return $this->find($id);
     }
 
+    public function getAllUrls()
+    {
+        $urls = $this->query("SELECT url FROM {$this->table}")->fetch_all(MYSQLI_ASSOC);
+        $urlsFormatted = array_map(function($item) {
+            return $item["url"];
+        }, $urls);
+        return $urlsFormatted;
+    }
+
+    public function getPostIdByUrl($url)
+    {
+        $post = $this->query("SELECT id FROM {$this->table} WHERE url = '{$url}'")->fetch_all(MYSQLI_ASSOC);
+        return $post[0]['id'];
+    }
+
     public function makePublicPost($id)
     {
         $post = (new Post)->findById($id);
@@ -21,7 +37,7 @@ class PublicPost extends Database
             throw new \Exception('Post no encontrado', 404);
         }
         $userId = (new Post)->findById($id)[0]['user_id'];
-        $url    = random_int(1000000000, 9999999999).'-'.random_int(10000000, 99999999).'-'.random_int(10000, 99999);
+        $url    = CreateRandomUrl::publishPost();
         $this->query("UPDATE `posts` SET status = 1 WHERE id = {$id}");
         $this->query("INSERT INTO `{$this->table}` (`post_id`,`user_id`,`url`) VALUES ('{$id}', '{$userId}', '{$url}')");
         return $post;

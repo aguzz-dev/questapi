@@ -35,6 +35,17 @@ class QuestionController
         }
     }
 
+    public function storeQuestionFromWeb()
+    {
+        $request = $_POST;
+        try{
+            $res = (new Question)->store((object)$request);
+            JsonResponse::send(true, 'Pregunta creada con éxito', 200, $res);
+        }catch(Exception $e){
+            JsonResponse::exception($e);
+        }
+    }
+
     public function answerQuestion()
     {
         $request = JsonRequest::get();

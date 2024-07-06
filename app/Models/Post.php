@@ -3,6 +3,7 @@ namespace App\Models;
 
 use App\Helpers\JsonResponse;
 use app\Database;
+use App\Helpers\GetHeader;
 use App\Traits\FindTrait;
 
 class Post extends Database
@@ -12,22 +13,26 @@ class Post extends Database
 
     const DEFAULT_ASSET = 0;
 
-    public function findById($id)
+    public function findById($postId)
     {
-        return $this->find($id);
+        return $this->query(
+            "SELECT p.*, COUNT(q.id) AS total_questions 
+            FROM posts p 
+            LEFT JOIN questions q ON p.id = q.post_id 
+            WHERE p.status = 1 AND p.id = '{$postId}' 
+            GROUP BY p.id"
+        )->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getPostId($publicPostId)
+    public function getPostId($postId)
     {
-        return $this->query("SELECT `id` FROM {$this->table} WHERE id = '{$publicPostId}'")->fetch_all(MYSQLI_ASSOC);
+        return $this->query("SELECT `id` FROM {$this->table} WHERE id = '{$postId}'")->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getAllPosts($userId):array
     {
         $posts = [];
-        $sql = "SELECT * FROM " . $this->table. " WHERE user_id = '{$userId}'" ;
-        $allPosts = $this->query($sql);
-
+        $allPosts = $this->query("SELECT * FROM " . $this->table. " WHERE user_id = '{$userId}'") ;
         foreach($allPosts as $post){
             array_push($posts, $post);
         }
@@ -37,7 +42,7 @@ class Post extends Database
     public function store($request)
     {
         $title  = $request->title;
-        $userId = (new PersonalAccessToken)->getIdByToken($request->token);
+        $userId = (new PersonalAccessToken)->getIdByToken(getHeader::token());
         $this->query("INSERT INTO {$this->table} (`title`, `asset_id`, `user_id`) VALUES ('{$title}', '{$request->asset_id}', '{$userId}')");
         $idPost = $this->dbConnection->insert_id;
         $postCreated = $this->find($idPost);
