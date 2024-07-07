@@ -11,9 +11,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <title>Descarga Shhask!</title>
 </head>
+<style>
+    .playstore {
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    .playstore:hover{
+        scale: 1.1;
+    }
+</style>
 <body>
-    <img src="app/views/assets/logotipo-sd.png" alt="" class="logo">
-    <div class="download">Descargá <b>Shhask!</b></div>
+    <img style="width: 300px;" src="app/views/assets/logotipo-sd.png" alt="" class="logo">
+    <div style="margin-bottom: 10px;"class="download">Descargá <b>Shhask!</b></div>
     <div class="container">
         <img src="app/views/assets/raccoon-1.png" style="width: 430px;" alt="mascota-shhask" class="raccoon1">
         <img src="app/views/assets/google-play-badge.png" alt="" class="playstore">

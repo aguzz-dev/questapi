@@ -28,12 +28,3 @@ body{
     margin-right: 20px;
     padding-bottom: 50px;
 }
-
-.playstore{
-    cursor: pointer;
-    transition: all .3s ease;
-}
-
-.playstore:hover{
-    scale: 1.07;
-}
