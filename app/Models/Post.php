@@ -13,7 +13,12 @@ class Post extends Database
 
     const DEFAULT_ASSET = 0;
 
-    public function findById($postId)
+    public function findById($id)
+    {
+        return $this->find($id);
+    }
+
+    public function findPublishPostById($postId)
     {
         return $this->query(
             "SELECT p.*, COUNT(q.id) AS total_questions 
