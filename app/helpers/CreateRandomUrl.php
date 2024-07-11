@@ -8,7 +8,7 @@ class CreateRandomUrl
         $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $url = '';
         for ($i = 0; $i < 4; $i++) {
-            $url .= $chars[rand(0, 62)];
+            $url .= $chars[rand(0, 61)];
         }
         return $url;
     }
