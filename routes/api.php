@@ -9,11 +9,9 @@ use App\Controllers\AssetController;
 use App\Controllers\QuestionController;
 use App\Controllers\PublicPostController;
 
-Route::get('', function(){});
-
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/check-session', [AuthController::class, 'checkSession']);
-Route::post('/destroy-session', [AuthController::class, 'logout']);
+Route::get('/destroy-session', [AuthController::class, 'logout']);
 
 Route::post('/posts', [PostController::class, 'index']);
 Route::post('/posts/create', [PostController::class, 'store']);
@@ -36,9 +34,9 @@ Route::post('/question/create', [QuestionController::class, 'store']);
 Route::post('/question/create-web', [QuestionController::class, 'storeQuestionFromWeb']);
 Route::post('/question/answer', [QuestionController::class, 'answerQuestion']);
 
+Route::get('/assets', [AssetController::class, 'getAllAssets']);
 Route::post('/assets/buy', [AssetController::class, 'buyAsset']);
 Route::post('/assets/check', [AssetController::class, 'checkAssetExpired']);
 Route::post('/assets/id', [AssetController::class, 'getUserAssetsByUserId']);
-Route::post('/assets', [AssetController::class, 'getAllAssets']);
 
 Route::dispatch();
