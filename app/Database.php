@@ -15,7 +15,8 @@ class Database
             DB_HOST,
             DB_USER,
             DB_PASS,
-            DB_NAME
+            DB_NAME,
+            DB_PORT
         );
         mysqli_set_charset($this->dbConnection, 'utf8');
     }
