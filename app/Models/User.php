@@ -52,6 +52,7 @@ class User extends Database
             'username' => $user['username'],
             'email' => $user['email']
         ]);
+        (new PersonalAccessToken)->destroyToken($user['id']);
         $this->query("INSERT INTO `personal_access_tokens` (`token`, `user_id`) VALUES ('{$token}', '{$user['id']}')");
         $userData = [
             'id' => $user['id'],
