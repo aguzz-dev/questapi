@@ -2,18 +2,14 @@
 
 namespace App\Helpers;
 
-use Firebase\JWT\JWT;
-
 class GenerateToken
 {
-    public static function auth($userData) {
-        $issuedAt = time();
-        $expirationTime = $issuedAt + 3600 * 24;
-        $payload = array(
-            'iat' => $issuedAt,
-            'exp' => $expirationTime,
-            'data' => $userData
-        );
-        return JWT::encode($payload, SECRET_KEY, 'HS256');
+    public static function auth() {
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $token = '';
+        for ($i = 0; $i < 250; $i++) {
+            $token .= $chars[rand(0, 61)];
+        }
+        return $token;
     }
 }
